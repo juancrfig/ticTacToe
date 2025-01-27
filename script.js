@@ -1,17 +1,14 @@
-function Game(playerOne, playerTwo) {
-
-}
-
 function createBoard() {
-    // Private Data
+
     const board = ['', '', '', '', '', '', '', '', ''];
 
+    const winningCombinations = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],  // rows
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],  // columns
+        [0, 4, 8], [2, 4, 6]              // diagonals
+    ];
+
     function checkBoard() {
-        // This creates a copy of the current status of the board
-        // If the slice method wouldn't be used, the boardStatus
-        // would be a reference to the original board, which would
-        // allow to modify it.
-        // I wonder if using structuredCloned would be a more "professional" choice
         const boardStatus = board.slice();
         return boardStatus;
     }
@@ -20,23 +17,41 @@ function createBoard() {
         if (typeof mark === 'string' && board[cellIndex] === '') {
             board[cellIndex] = mark;
             return true;
-        } else {          // I wonder if this else is recommended, or if it could be
-            // better just write a return false at the end of the function...
-            return false;
         }
+        return false;
     }
 
-    // Public Interface
+    function checkWinner(mark) {
+        let winnerFlag = false;
+        winningCombinations.forEach( combination => {
+            if (!winnerFlag) {
+                if (combination.every( (cell) => board[cell] === mark )) {
+                    console.log(`Winner at ${combination}`)
+                    winnerFlag = true;
+                }
+            }
+        })
+        return winnerFlag;
+    }
+
+    function isBoardPlayable(markLastPlayer) {
+        if ( checkWinner(markLastPlayer) ) {
+            return 'winner';
+        } else if (!board.includes('')) {
+            return 'tie';
+        }
+        return true;
+    }
+
     return {
+        checkBoard,
+        makeMark,
+        isBoardPlayable
     }
 }
 
-
-// This is a FACTORY FUNCTION
 function createPlayer(name, mark, score=0) {
-    // Private Data
 
-    // Public Interface
     return {
         name,
         mark,
@@ -49,6 +64,7 @@ function gameTest() {
     const playerOne = createPlayer('Juanes', 'X');
     const playerTwo = createPlayer('Wiktoria', 'O');
     const board = createBoard();
+    console.log(board.isBoardPlayable('X'))
 }
 
 gameTest();

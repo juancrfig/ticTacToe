@@ -22,16 +22,9 @@ function createBoard() {
     }
 
     function checkWinner(mark) {
-        let winnerFlag = false;
-        winningCombinations.forEach( combination => {
-            if (!winnerFlag) {
-                if (combination.every( (cell) => board[cell] === mark )) {
-                    console.log(`Winner at ${combination}`)
-                    winnerFlag = true;
-                }
-            }
-        })
-        return winnerFlag;
+        return winningCombinations.some( combination => {
+            combination.every( cell => board[cell] === mark)
+        });
     }
 
     function isBoardPlayable(markLastPlayer) {

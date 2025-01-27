@@ -52,12 +52,36 @@ function createPlayer(name, mark, score=0) {
     };
 }
 
+function createGame(playerOne, playerTwo) {
 
-function gameTest() {
-    const playerOne = createPlayer('Juanes', 'X');
-    const playerTwo = createPlayer('Wiktoria', 'O');
-    const board = createBoard();
-    console.log(board.isBoardPlayable('X'))
+    const players = [playerOne, playerTwo];
+    let currentPlayerIndex = 0;
+
+    function getCurrentPlayer() {
+        return players[currentPlayerIndex];
+    }
+
+    function changeTurn() {
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+    }
+
+    return {
+        getCurrentPlayer,
+        changeTurn,
+    };
 }
 
-gameTest();
+function mainLogic() {
+
+    const PlayerOne = createPlayer('Juanes', 'X');
+    const PlayerTwo = createPlayer('Wiktoria', 'O');
+    const board = createBoard();
+    const game = createGame(PlayerOne, PlayerTwo);
+
+    
+
+
+}
+
+
+mainLogic();

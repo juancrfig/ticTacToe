@@ -56,7 +56,7 @@ function createPlayer(name, mark, score=0) {
 
 function createGame(playerOne, playerTwo) {
 
-    const highestScores = [];
+
     const players = [playerOne, playerTwo];
     let currentPlayerIndex = 0;
 
@@ -68,27 +68,30 @@ function createGame(playerOne, playerTwo) {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
     }
 
-    function updateScoreBoard(playerName, playerScore) {
-        if (playerScore > highestScores[9]) {
-
+    function updateScoreBoard(playerName) {
+        if (highestScores.some( cell => cell === 'null')) {
+            highestScores.push({
+                name : playerName,
+                score: 1
+            })
         }
     }
 
     return {
         getCurrentPlayer,
         changeTurn,
-        highestScores
     };
 }
 
 function mainLogic() {
-    const playerOne = createPlayer('Juanes', 'X');
-    const playerTwo = createPlayer('Wiktoria', 'O');
+    const playerOne = createPlayer('Autem', 'X');
+    const playerTwo = createPlayer('Ezio', 'O');
 
     const board = createBoard();
     const game = createGame(playerOne, playerTwo);
 
     let gameStatus;
+    let winner;
     do {
         const currentPlayer = game.getCurrentPlayer();
         const randomCell = randomIndex();
@@ -101,8 +104,9 @@ function mainLogic() {
     } while (gameStatus === true);
 
     if (gameStatus === 'winner') {
-        const winnerName = game.getCurrentPlayer().name;
-        console.log(`The winner is ${winnerName}!`);
+        winner = game.getCurrentPlayer();
+        winner.score++;
+        console.log(`The winner is ${winner.name}!`);
     } else if (gameStatus === 'tie') {
         console.log("The game is a tie!");
     } else {

@@ -23,7 +23,9 @@ function createBoard() {
 
     function checkWinner(mark) {
         return winningCombinations.some( combination => {
-            combination.every( cell => board[cell] === mark)
+            return combination.every( cell => {
+                return board[cell] === mark;
+            })
         });
     }
 
@@ -54,6 +56,7 @@ function createPlayer(name, mark, score=0) {
 
 function createGame(playerOne, playerTwo) {
 
+    const highestScores = [];
     const players = [playerOne, playerTwo];
     let currentPlayerIndex = 0;
 
@@ -65,22 +68,50 @@ function createGame(playerOne, playerTwo) {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
     }
 
+    function updateScoreBoard(playerName, playerScore) {
+        if (playerScore > highestScores[9]) {
+
+        }
+    }
+
     return {
         getCurrentPlayer,
         changeTurn,
+        highestScores
     };
 }
 
 function mainLogic() {
+    const playerOne = createPlayer('Juanes', 'X');
+    const playerTwo = createPlayer('Wiktoria', 'O');
 
-    const PlayerOne = createPlayer('Juanes', 'X');
-    const PlayerTwo = createPlayer('Wiktoria', 'O');
     const board = createBoard();
-    const game = createGame(PlayerOne, PlayerTwo);
+    const game = createGame(playerOne, playerTwo);
 
-    
+    let gameStatus;
+    do {
+        const currentPlayer = game.getCurrentPlayer();
+        const randomCell = randomIndex();
 
+        board.makeMark(currentPlayer.mark, randomCell);
 
+        game.changeTurn();
+
+        gameStatus = board.isBoardPlayable(currentPlayer.mark);
+    } while (gameStatus === true);
+
+    if (gameStatus === 'winner') {
+        const winnerName = game.getCurrentPlayer().name;
+        console.log(`The winner is ${winnerName}!`);
+    } else if (gameStatus === 'tie') {
+        console.log("The game is a tie!");
+    } else {
+        console.log("The game ended unexpectedly.");
+    }
+}
+
+function randomIndex() {
+    return Math.floor( Math.random() * 9);
 }
 
 
